@@ -1,0 +1,73 @@
+model:
+  type: efficientnetlite_b0
+  kwargs:
+    bn:
+      use_sync_bn: false
+      kwargs: {}
+dist:
+  sync: true
+qparams:
+  w_method: dorefa
+  a_method: dorefa
+  bit: 4
+backend: snpe
+bnfold: 4
+optimizer:
+  type: SGD
+  kwargs:
+    nesterov: true
+    momentum: 0.9
+    weight_decay: 1.0e-05
+  pconfig:
+    bn_b:
+      weight_decay: 0.0
+    bn_w:
+      weight_decay: 0.0
+lr_scheduler:
+  type: Cosine
+  kwargs:
+    base_lr: 0.0001
+    warmup_lr: 0.01
+    warmup_steps: 2500
+    max_iter: 250000
+    min_lr: 0.0
+label_smooth: 0.1
+ema:
+  enable: false
+data:
+  type: imagenet
+  read_from: mc
+  use_dali: false
+  batch_size: 32
+  num_workers: 6
+  pin_memory: true
+  input_size: 224
+  test_resize: 256
+  train:
+    root_dir: /mnt/lustrenew/share/images/train/
+    meta_file: /mnt/lustrenew/share/images/meta/train.txt
+    image_reader:
+      type: pil
+    sampler:
+      type: distributed_iteration
+    transforms:
+      type: STANDARD
+  test:
+    root_dir: /mnt/lustrenew/share/images/val/
+    meta_file: /mnt/lustrenew/share/images/meta/val.txt
+    image_reader:
+      type: pil
+    sampler:
+      type: distributed
+    transforms:
+      type: ONECROP
+    evaluator:
+      type: imagenet
+      kwargs:
+        topk:
+        - 1
+        - 5
+saver:
+  print_freq: 200
+  val_freq: 1000
+  save_many: false

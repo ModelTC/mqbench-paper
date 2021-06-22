@@ -1,0 +1,75 @@
+model:
+    type: resnet18
+    kwargs:
+        bn:
+            use_sync_bn: False
+            kwargs: {}
+dist:
+    sync: True
+
+qparams:
+    w_method: lsq
+    a_method: lsq
+    bit: 8
+    a_observer: LSQObserver
+    w_observer: LSQObserver
+
+backend: academic
+
+optimizer:
+    type: Adam
+    kwargs:
+        weight_decay: 0
+
+lr_scheduler:
+    type: Cosine
+    kwargs:
+        base_lr: 0.00001
+        warmup_lr: 0.00001
+        warmup_steps: 0
+        max_iter: 10000
+        min_lr: 0.0
+
+label_smooth: 0.1
+ema:
+    enable: False
+data:
+    type: imagenet
+    read_from: mc
+    use_dali: False
+    batch_size: 32
+    num_workers: 4
+    pin_memory: True
+    input_size: 224
+    test_resize: 256
+    train:
+        root_dir: /mnt/lustre/share/images/train/
+        meta_file: /mnt/lustre/share/images/meta/train.txt
+        image_reader:
+            type: pil
+        sampler:
+            type: distributed_iteration
+        transforms:
+            type: STANDARD
+    test:
+        root_dir: /mnt/lustre/share/images/val/
+        meta_file: /mnt/lustre/share/images/meta/val.txt
+        image_reader:
+            type: pil
+        sampler:
+            type: distributed
+        transforms:
+            type: ONECROP
+        evaluator:
+            type: imagenet
+            kwargs:
+                topk: [1, 5]
+saver:
+    print_freq: 200
+    val_freq: 1000
+    save_many: False
+    pretrain:
+        path: checkpoints/ckpt.pth.tar
+        ignore:
+            key: {}
+            model: {}
