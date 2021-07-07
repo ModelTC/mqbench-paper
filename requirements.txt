@@ -1,0 +1,14 @@
+scipy==1.3.1
+onnx==1.7.0
+torch==1.8.1
+torchvision==0.8.0
+numpy==1.19.4
+requests==2.25.1
+easydict==1.9
+timm==0.4.5
+mc==0.0
+Pillow==8.3.1
+PyYAML==5.4.1
+ruamel_yaml==0.17.10
+scikit_learn==0.24.2
+tensorboardX==2.4
