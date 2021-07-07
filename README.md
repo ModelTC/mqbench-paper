@@ -9,6 +9,15 @@ We propose a benchmark to evaluate different quantization algorithms on various 
 ## Table of Contents
 
 - [Table of Contents](https://github.com/TheGreatCold/mqbench#table-of-contents)
+- [Highlighted Features](https://github.com/TheGreatCold/mqbench#highlighted-features)
+- [Installation](https://github.com/TheGreatCold/mqbench#installation)
+- [How to self-implement a quantization algorithm](https://github.com/TheGreatCold/mqbench#how-to-self-implement-a-quantization-algorithm)
+- [Submitting Your Results to MQBench](https://github.com/TheGreatCold/mqbench#submitting-your-results-to-mqbench)
+- [Lisence](https://github.com/TheGreatCold/mqbench#license)
+
+
+
+
 
 ## Highlighted Features
 
