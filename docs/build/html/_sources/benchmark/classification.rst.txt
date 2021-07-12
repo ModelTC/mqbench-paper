@@ -1,0 +1,115 @@
+ImageNet
+=========
+
+NNIE
+------
+
+.. list-table:: Benchmark on Imagenet for NNIE
+   :header-rows: 1
+
+   * - Model
+     - Full-Precision
+     - Switch
+     - Dipoorlet
+     - Dirichlet
+     - Time
+   * - ResNet-18
+     -
+     -
+     -
+     -
+     -
+   * - ResNet-34
+     -
+     -
+     -
+     -
+     -
+   * - ResNet-50
+     -
+     -
+     -
+     -
+     -
+   * - ResNet-101
+     -
+     -
+     -
+     -
+     -
+
+
+PPL-DSP
+---------
+
+.. list-table:: Benchmark on Imagenet for PPL-DSP (per-layer quantization)
+   :header-rows: 1
+
+   * - Model
+     - Full-Precision
+     - Switch
+     - Dipoorlet
+     - Dirichlet
+     - Time
+   * - ResNet-18
+     -
+     -
+     -
+     -
+     -
+   * - ResNet-34
+     -
+     -
+     -
+     -
+     -
+   * - ResNet-50
+     -
+     -
+     -
+     -
+     -
+   * - ResNet-101
+     -
+     -
+     -
+     -
+     -
+
+
+TensorRT
+---------
+
+.. list-table:: Benchmark on Imagenet for TensorRT
+   :header-rows: 1
+
+   * - Model
+     - Full-Precision
+     - Switch
+     - Dipoorlet
+     - Dirichlet
+     - Time
+   * - ResNet-18
+     -
+     -
+     -
+     -
+     -
+   * - ResNet-34
+     -
+     -
+     -
+     -
+     -
+   * - ResNet-50
+     -
+     -
+     -
+     -
+     -
+   * - ResNet-101
+     -
+     -
+     -
+     -
+     -

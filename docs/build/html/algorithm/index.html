@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Quantization Algorithm &mdash; MQBench  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/contentui.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quantization Hardware" href="../hardware/index.html" />
+    <link rel="prev" title="Welcome to MQBench’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MQBench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quantization Algorithm</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#post-training-quantization-v-s-quantization-aware-training">Post-training Quantization v.s. Quantization-aware Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#qat-algorithms">QAT Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ptq-algorithms">PTQ Algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">Quantization Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark/index.html">Benchmark</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MQBench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Quantization Algorithm</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/algorithm/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quantization-algorithm">
+<h1>Quantization Algorithm<a class="headerlink" href="#quantization-algorithm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="post-training-quantization-v-s-quantization-aware-training">
+<h2>Post-training Quantization v.s. Quantization-aware Training<a class="headerlink" href="#post-training-quantization-v-s-quantization-aware-training" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Post Training Quantization (PTQ):</p>
+<p>Quantize a pre-trained network with limited data and computation resources, including activation range estimation, bn statistics update and other tuning techniques.</p>
+</li>
+<li><p>Quantization Aware Training (QAT):</p>
+<p>End-to-end Finetuning a pre-trained full-precision model, this requires all training data and huge computation resource.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="qat-algorithms">
+<h2>QAT Algorithms<a class="headerlink" href="#qat-algorithms" title="Permalink to this headline">¶</a></h2>
+<p><strong>Learned Step Size Quantization</strong>:</p>
+<p><a class="reference external" href="https://arxiv.org/abs/1902.08153">LSQ</a> leverages the Straight-Through Estimator (i.e. directly pass the gradient in round operation) to learn the quantization scale for each layer.
+Please refer to the original paper for detailed derivation of the scale gradient.
+For initialization, we use the method proposed in original paper: the scale is determined by <span class="math notranslate nohighlight">\(s= \frac{2||\mathbf{w}||_1}{\sqrt{N_{max}}}\)</span>. For symmetric quantization, the zero point is initialized to 0, and kept fixed. For asymmetric quantization, zero point is initialized to <span class="math notranslate nohighlight">\(N_{min}\)</span> if the activation is non-negative. Inspired by <a class="reference external" href="https://arxiv.org/abs/2004.09576">LSQ plus</a>, the zero point can also be updated through backpropagation with the help of STE. Therefore we make it learnable in asymmetric quantization.
+LSQ uses gradient scale to stabilize the scale learning. The gradient scale is determined by <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{MN_{max}}}\)</span> where <span class="math notranslate nohighlight">\(M\)</span> is the number of elements in that tensor. We extend this gradient scale to per-channel weight learning, where the <span class="math notranslate nohighlight">\(M\)</span> is the number of weights in each filter.</p>
+<p><strong>Differentiable Soft Quantization</strong>:</p>
+<p><a class="reference external" href="https://arxiv.org/abs/1908.05033">DSQ</a> uses the hyperbolic tangent function to approximate the conventionally adopted STE. In our implementation, we use <span class="math notranslate nohighlight">\(\alpha=0.4\)</span> (for definition please refer to the original paper) which controls the shape and smoothness of the <span class="math notranslate nohighlight">\(\mathrm{tanh}\)</span> function. For weight quantization, we use the min-max range as</p>
+\[Clip_{min} = \mu(\mathbf{w}) - 2.6\sigma(\mathbf{w}) \]
+\[Clip_{max} = \mu(\mathbf{w}) + 2.6\sigma(\mathbf{w}) \]<p>where <span class="math notranslate nohighlight">\(\mu(\cdot)\)</span> and <span class="math notranslate nohighlight">\(\sigma(\cdot)\)</span> compute the mean and standard deviation of the tensor. Then, the scale is determined by <span class="math notranslate nohighlight">\(s=\frac{\max(-Clip_{min}, Clip_{max})}{N_{max}-N_{min}}\)</span> for symmetric quantization, and <span class="math notranslate nohighlight">\(\frac{Clip_{max}-Clip_{min}}{N_{max}-N_{min}}\)</span> for asymmetric quantization. The zero point is set to 0 for symmetric and <span class="math notranslate nohighlight">\(N_{min}-\lfloor \frac{Clip_{min}}{s}\rceil\)</span> for asymmetric quantization. For activation, we use the BatchMinMax as the clipping range, i.e. the averaged min-max range across the batch dimension. This is further updated with exponential moving average across different batches with momentum 0.9, similar to Batch Normalization.</p>
+<p><strong>Parameterized Clipping Activation</strong>:</p>
+<p><a class="reference external" href="https://arxiv.org/abs/1805.06085">PACT</a> is introduced to quantized activation by learning the clipping threshold through STE. Its activation is clipped by a parameter <span class="math notranslate nohighlight">\(\alpha\)</span> first. Then, the clipped activation is quantized and re-quantized. Although PACT and LSQ both learns the scale, they have three differences. First, the clipping range in PACT is handcrafted initialized to 6 while LSQ initialization is based on the tensor <span class="math notranslate nohighlight">\(L1\)</span> norm. Second, PACT has no gradient in the range of clipping. While LSQ can compute the gradient. Third, PACT does not scale the gradient of <span class="math notranslate nohighlight">\(\alpha\)</span>, while LSQ does.
+Note that PACT only has non-negative, unsigned quantization in the first. To extend it to our hardware settings, we clip the activation to <span class="math notranslate nohighlight">\((-\alpha, \alpha)\)</span> in symmetric case and <span class="math notranslate nohighlight">\((\beta, \alpha)\)</span> for asymmetric case, (where <span class="math notranslate nohighlight">\(\beta\)</span> is initialized to <span class="math notranslate nohighlight">\(-6\)</span>).
+For weight quantization of PACT, it is the same with DoReFa-Net.</p>
+<p><strong>DoReFa-Net</strong>:</p>
+<p>DoReFa-Net simply clips the activation to <span class="math notranslate nohighlight">\([0, 1]\)</span> and then quantizes it. This is based on the intuition that most activation will fall into this range in old network architectures, e.g. AlexNet and ResNet. In hardware settings, we modify the activation range to <span class="math notranslate nohighlight">\([-1, 1]\)</span> for both symmetric and asymmetric quantization. As for weight quantization, it can be described as:</p>
+\[\tilde{\mathbf{w}} = \mathrm{tanh}(\mathbf{w}) \frac{1}{\max(|\mathrm{tanh}(\mathbf{w})|)} \]
+\[\hat{\mathbf{w}} = \mathrm{dequantize}(\mathrm{quantize(\tilde{\mathbf{w}})}) \]<p>where the first step is a non-linear transformation and the second step is the quantization and the de-quantization. The scale is simply calculated by <span class="math notranslate nohighlight">\(\frac{2}{N_{max}-N_{min}}\)</span> for symmetric quantization and <span class="math notranslate nohighlight">\(\frac{\max(\tilde{\mathbf{w}}) - \min(\tilde{\mathbf{w}})}{N_{max}-N_{min}}\)</span> for asymmetric quantization.</p>
+<p><strong>Additive Powers-of-Two Quantization</strong>:</p>
+<p><a class="reference external" href="https://arxiv.org/abs/1909.13144">APoT</a> quantization uses multiple PoT’s (Powers-of-Two)  combination to composes a set of non-uniform quantization levels. Since the quantization are non-uniform in most cases (except the case of 2-bit the APoT becomes uniform quantization), we do not benchmark it on real hardware. Additionally, APoT introduces weight normalization (similar to <a class="reference external" href="https://github.com/joe-siyuan-qiao/WeightStandardization">weight standardization</a> technique) to smooth the learning process of clipping range in weight. However, it is unclear how to incoporate this technique with BN folding.
+Therefore, we only reproduce it in our academic setting. The implementation are based on the <a class="reference external" href="https://github.com/yhhhli/APoT_Quantization">opensource codes</a>.</p>
+<p><strong>Quantization Interval Learning</strong>:</p>
+<p><a class="reference external" href="https://arxiv.org/abs/1808.05779">QIL</a> composes of two unit to quantization: (1) the first one is called transformer, which transform the weights or activation to <span class="math notranslate nohighlight">\([-1, 1]\)</span> (<span class="math notranslate nohighlight">\([0, 1]\)</span> as for non-negative activation).
+This transformer also has two functionalities: pruning and non-linearity.
+(2) The second one is called quantizer, given by</p>
+\[ \tilde{\mathbf{w}} = \mathrm{clip}\left((\alpha |\mathbf{w}| + \beta)^{\gamma}, 0, 1\right) * \mathrm{sign}(\mathbf{w})\]
+\[    \hat{\mathbf{w}} = \mathrm{dequantize}(\mathrm{quantize(\tilde{\mathbf{w}})}),  \]<p>where <span class="math notranslate nohighlight">\(\alpha = \frac{1}{2*D}\)</span> and <span class="math notranslate nohighlight">\(\beta=-\frac{C}{2D}+\frac{1}{2}\)</span>. This transformation maps the weight from <span class="math notranslate nohighlight">\([C-D, C+D]\)</span> to <span class="math notranslate nohighlight">\([0, 1]\)</span> and <span class="math notranslate nohighlight">\([-C-D, -C+D]\)</span> to <span class="math notranslate nohighlight">\([-1, 0]\)</span>. As a result, the weights between <span class="math notranslate nohighlight">\([-C+D, C-D]\)</span> are pruned. The non-linearity of the transformation function is introduced by $gamma$. This parameter can control the linearity and thus control the quantization interval. However, we find this technique is extremely unstable. In our experimental reproduction, learning $gamma$ will not converge. In the original paper, the gradient scale of <span class="math notranslate nohighlight">\(C\)</span> and <span class="math notranslate nohighlight">\(D\)</span> is set to 0.01. We find this gradient scale also leads to frequent crashes. Thus we use the gradient scale introduced in LSQ, i.e. <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{MN_{max}}}\)</span>.</p>
+</div>
+<div class="section" id="ptq-algorithms">
+<h2>PTQ Algorithms<a class="headerlink" href="#ptq-algorithms" title="Permalink to this headline">¶</a></h2>
+<p>To be updated.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../hardware/index.html" class="btn btn-neutral float-right" title="Quantization Hardware" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to MQBench’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Sensetime.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

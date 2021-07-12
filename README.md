@@ -180,7 +180,7 @@ Note: the rest of the config file should not be modified in order to keep a unif
 
 ## Submitting Your Results to MQBench
 
-You can submit your implementation to MQBench [website](http://mqbench.tech/) by submmitting the `config.yaml` and the `log.txt` file. 
+You can submit your implementation to MQBench by submmitting a merge request to this repo. The implementation of new algorithms and the running scripts, log file are needed for evalutation. 
 
 
 

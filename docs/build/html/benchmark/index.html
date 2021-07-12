@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Benchmark &mdash; MQBench  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/contentui.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Quantization Hardware" href="../hardware/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MQBench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../algorithm/index.html">Quantization Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">Quantization Hardware</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Benchmark</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#running-experiments-in-mqbench">Running experiments in MQBench</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-self-implement-a-quantization-algorithm">How to self-implement a quantization algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-self-implement-a-hardware-configuration">How to self-implement a hardware configuration</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MQBench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Benchmark</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/benchmark/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="benchmark">
+<h1>Benchmark<a class="headerlink" href="#benchmark" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="running-experiments-in-mqbench">
+<h2>Running experiments in MQBench<a class="headerlink" href="#running-experiments-in-mqbench" title="Permalink to this headline">¶</a></h2>
+<p>MQBench integrate the lastest quantization features in Pytorch. With the help of <code class="docutils literal notranslate"><span class="pre">torch.fx</span></code>, we can automated trace a model and get its computation graph.</p>
+<blockquote>
+<div><p>FX is a toolkit for developers to use to transform nn.Module instances. FX consists of three main components: a symbolic tracer, an intermediate representation, and Python code generation.</p>
+<p>The symbolic tracer performs “symbolic execution” of the Python code. It feeds fake values, called Proxies, through the code. Operations on theses Proxies are recorded. More information about symbolic tracing can be found in the symbolic_trace() and Tracer documentation.</p>
+<p>The intermediate representation is the container for the operations that were recorded during symbolic tracing. It consists of a list of Nodes that represent function inputs, callsites (to functions, methods, or torch.nn.Module instances), and return values. More information about the IR can be found in the documentation for Graph. The IR is the format on which transformations are applied.</p>
+<p>Python code generation is what makes FX a Python-to-Python (or Module-to-Module) transformation toolkit. For each Graph IR, we can create valid Python code matching the Graph’s semantics. This functionality is wrapped up in GraphModule, which is a torch.nn.Module instance that holds a Graph as well as a forward method generated from the Graph.</p>
+<p>Taken together, this pipeline of components (symbolic tracing -&gt; intermediate representation -&gt; transforms -&gt; Python code generation) constitutes the Python-to-Python transformation pipeline of FX. In addition, these components can be used separately. For example, symbolic tracing can be used in isolation to capture a form of the code for analysis (and not transformation) purposes. Code generation can be used for programmatically generating models, for example from a config file. There are many uses for FX!</p>
+</div></blockquote>
+<p>See details of <code class="docutils literal notranslate"><span class="pre">torch.fx</span></code> <a class="reference external" href="https://pytorch.org/docs/stable/fx.html">here</a>.</p>
+<p>Our framework adopts the official API to convert a quantized model.
+First, the backend parameters need to be determined. This includes the symmetry, per-channel or per-tensor quantization and POT or FP32 scale. Take SNPE as an example: the backend parameters are defined as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">backend_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ada_sign</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">per_channel</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">pot_scale</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, we can convert the model with the official API:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch.quantization.quantize_fx</span> <span class="kn">as</span> <span class="nn">quantize_fx</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">model_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">model_qconfig</span> <span class="o">=</span> <span class="n">get_qconfig</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">qparams</span><span class="p">,</span> <span class="o">**</span><span class="n">backend_params</span><span class="p">)</span>
+<span class="n">foldbn_config</span> <span class="o">=</span> <span class="n">get_foldbn_config</span><span class="p">(</span><span class="n">foldbn_strategy</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">quantize_fx</span><span class="o">.</span><span class="n">prepare_qat_fx</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="n">model_qconfig</span><span class="p">},</span> <span class="n">foldbn_config</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here <code class="docutils literal notranslate"><span class="pre">model_qconfig</span></code> and <code class="docutils literal notranslate"><span class="pre">foldbn_config</span></code> is determined by the quantization algorithms. Users can freely choose the strategy for BN folding and the algorithms for QAT. After the <code class="docutils literal notranslate"><span class="pre">prepare_qat_fx</span></code>, the model can be trained as a normal Pytorch <code class="docutils literal notranslate"><span class="pre">nn.Module</span></code>.</p>
+<p>We provide the running scripts <cite>run.sh</cite> and configuration file <cite>config.yaml</cite> of all experiments in MQBench.</p>
+<p>To reproduce LSQ on ResNet-18,</p>
+<ol class="arabic simple">
+<li><p>enter the directory</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> PATH-TO-PROJECT/qbench_zoo
+<span class="nb">cd</span> lsq_experiments/resnet18_4bit_academic
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>run script</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sh run.sh
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> contain some commands that may not be found, the core running command is</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$PYTHONPATH</span>:../../..
+python -u -m prototype.solver.cls_quant_solver --config config.yaml
+</pre></div>
+</div>
+</div>
+<div class="section" id="how-to-self-implement-a-quantization-algorithm">
+<h2>How to self-implement a quantization algorithm<a class="headerlink" href="#how-to-self-implement-a-quantization-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>All our quantization algorithms are implemented in <cite>prototype/quantization/</cite></p>
+<p>To implementa a new algorithm, you need to add you quantizer into this directory.</p>
+<p>All quantizer are inheritant from <code class="docutils literal notranslate"><span class="pre">QuantizeBase</span></code> class. Each <code class="docutils literal notranslate"><span class="pre">QuantizedBase</span></code> will have an observer class which is used to estimate/update the quantization range. The observer design is inspired from the Pytorch-1.8 <a class="reference external" href="https://github.com/pytorch/pytorch/blob/master/torch/quantization/observer.py">repo</a>. By intializing a <code class="docutils literal notranslate"><span class="pre">QuantizeBase</span></code> class, a <code class="docutils literal notranslate"><span class="pre">Observer</span></code> class will also be initialized to <em>observe</em> the activation range for this quantization node.</p>
+<p>The parameters contained for  <code class="docutils literal notranslate"><span class="pre">QuantizeBase</span></code> and <code class="docutils literal notranslate"><span class="pre">Observer</span></code> include：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">quant_min,</span> <span class="pre">quant_max</span></code>, which specify the <span class="math notranslate nohighlight">\(N_{min}, N_{max}\)</span> for rounding boundaries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">qshcme</span></code>, which can be <code class="docutils literal notranslate"><span class="pre">torch.per_tensor_symmetric</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.per_channel_symmetric</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.per_tensor_affine</span></code>, and <code class="docutils literal notranslate"><span class="pre">torch.per_channel_affine</span></code>. This is often determined by the hardware setup.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ch_axis</span></code>, which is the dimension of channel-wise quantization. -1 is for per-tensor quantization. Typically for <code class="docutils literal notranslate"><span class="pre">nn.Conv2d</span></code> and <code class="docutils literal notranslate"><span class="pre">nn.Linear</span></code> module, the <code class="docutils literal notranslate"><span class="pre">ch_axis</span></code> should be 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ada_sign</span></code>, which can adaptively choose the signness. <code class="docutils literal notranslate"><span class="pre">ada_sign</span></code> should be enabled for academic setting only.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pot_scale</span></code>, which is used to determine the powers-of-two scale parameters.</p></li>
+</ol>
+<p>Note: each specified quantizer may have its own unique parameters, see example of LSQ below.</p>
+<p><strong>Example Implementation of LSQ:</strong></p>
+<ol class="arabic simple">
+<li><p>For initialization, we add new parameters for storing the scale, zero_point:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">use_grad_scaling</span> <span class="o">=</span> <span class="n">use_grad_scaling</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">scale</span><span class="p">]))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">zero_point</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">zero_point</span><span class="p">]))</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>The major implementation is the <cite>forward</cite> function, which should contain several cases:</p>
+<ol class="arabic simple">
+<li><p>In case of <cite>ada_sign=True</cite>, the quantization range should be adjusted.</p></li>
+</ol>
+</li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ada_sign</span> <span class="ow">and</span> <span class="n">X</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">quant_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_post_process</span><span class="o">.</span><span class="n">quant_max</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitwidth</span> <span class="o">-</span> <span class="mi">1</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">quant_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_post_process</span><span class="o">.</span><span class="n">quant_min</span> <span class="o">=</span> <span class="mi">0</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">activation_post_process</span><span class="o">.</span><span class="n">adjust_sign</span> <span class="o">=</span> <span class="bp">True</span>
+
+
+<span class="mf">2.</span> <span class="n">In</span> <span class="n">case</span> <span class="n">of</span> <span class="n">symmetric</span> <span class="n">quantization</span><span class="p">,</span> <span class="n">the</span> <span class="n">zero</span> <span class="n">point</span> <span class="n">should</span> <span class="nb">set</span> <span class="n">to</span> <span class="mf">0.</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="bp">self</span><span class="o">.</span><span class="n">zero_point</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+
+<span class="mf">3.</span> <span class="n">In</span> <span class="n">case</span> <span class="n">of</span> <span class="n">powers</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">two</span> <span class="n">scale</span><span class="p">,</span> <span class="n">the</span> <span class="n">scale</span> <span class="n">should</span> <span class="n">be</span> <span class="n">quantized</span> <span class="n">by</span><span class="p">:</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="k">def</span> <span class="nf">pot_quantization</span><span class="p">(</span><span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+       <span class="n">log2t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
+       <span class="n">log2t</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">log2t</span><span class="p">)</span><span class="o">-</span><span class="n">log2t</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span> <span class="o">+</span> <span class="n">log2t</span>
+       <span class="k">return</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">log2t</span>
+
+   <span class="n">scale</span> <span class="o">=</span> <span class="n">pot_quantization</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+
+<span class="mf">4.</span> <span class="n">Implement</span> <span class="n">both</span> <span class="n">per</span><span class="o">-</span><span class="n">channel</span> <span class="ow">and</span> <span class="n">per</span><span class="o">-</span><span class="n">tensor</span> <span class="n">quantization</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><strong>After adding you quantizer…</strong></p>
+<p>The next step is to register the quantizer in <cite>prototype/quantization/qconfig.py</cite></p>
+<p>Import your quantizer and then add it to <cite>get_qconfig</cite> function, and parse necessary arguments.</p>
+<p>The final step is to override a <cite>config.yaml</cite> file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">qparams</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">w_method</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">lsq</span>
+    <span class="l l-Scalar l-Scalar-Plain">a_method</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">lsq</span>
+    <span class="l l-Scalar l-Scalar-Plain">bit</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+
+<span class="l l-Scalar l-Scalar-Plain">backend</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">academic</span>
+<span class="l l-Scalar l-Scalar-Plain">bnfold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+</pre></div>
+</div>
+<p>By replacing the <code class="docutils literal notranslate"><span class="pre">w_method,</span> <span class="pre">a_method</span></code>, you can run your implementation.</p>
+<p>Note: the rest of the config file should not be modified in order to keep a unified training setting.</p>
+</div>
+<div class="section" id="how-to-self-implement-a-hardware-configuration">
+<h2>How to self-implement a hardware configuration<a class="headerlink" href="#how-to-self-implement-a-hardware-configuration" title="Permalink to this headline">¶</a></h2>
+<p>Adding a new setting in hardware is much simpler that algorithms. To do this, we can add another condition in the <code class="docutils literal notranslate"><span class="pre">if-else</span></code> selection. For example, adding a new hardware TFLite Micro:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">elif</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;tflitemicro&quot;</span><span class="p">:</span>
+        <span class="n">backend_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ada_sign</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">per_channel</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">pot_scale</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="o">...</span>
+
+<span class="n">model_qconfig</span> <span class="o">=</span> <span class="n">get_qconfig</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">qparams</span><span class="p">,</span> <span class="o">**</span><span class="n">backend_params</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">quantize_fx</span><span class="o">.</span><span class="n">prepare_qat_fx</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="n">model_qconfig</span><span class="p">},</span> <span class="n">foldbn_config</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../hardware/index.html" class="btn btn-neutral float-left" title="Quantization Hardware" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Sensetime.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
