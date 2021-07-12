@@ -12,6 +12,7 @@ We propose a benchmark to evaluate different quantization algorithms on various 
 - [Highlighted Features](https://github.com/TheGreatCold/mqbench#highlighted-features)
 - [Installation](https://github.com/TheGreatCold/mqbench#installation)
 - [How to self-implement a quantization algorithm](https://github.com/TheGreatCold/mqbench#how-to-self-implement-a-quantization-algorithm)
+- [How to self-implement a hardware configuration](https://github.com/TheGreatCold/mqbench#how-to-self-implement-a-hardware-configuration)
 - [Submitting Your Results to MQBench](https://github.com/TheGreatCold/mqbench#submitting-your-results-to-mqbench)
 - [Lisence](https://github.com/TheGreatCold/mqbench#license)
 
@@ -176,7 +177,20 @@ By replacing the `w_method, a_method`, you can run your implementation.
 
 Note: the rest of the config file should not be modified in order to keep a unified training setting. 
 
+How to self-implement a hardware configuration
+-----------------------------------------------
 
+Adding a new setting in hardware is much simpler that algorithms. To do this, we can add another condition in the ``if-else`` selection. For example, adding a new hardware TFLite Micro:
+
+
+```python
+        elif backend == "tflitemicro":
+            backend_params = dict(ada_sign=False, symmetry=True, per_channel=False, pot_scale=True)
+        ...
+
+    model_qconfig = get_qconfig(**self.qparams, **backend_params)
+    model = quantize_fx.prepare_qat_fx(model, {"": model_qconfig}, foldbn_config)
+```
 
 ## Submitting Your Results to MQBench
 
