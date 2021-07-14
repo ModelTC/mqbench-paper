@@ -200,5 +200,5 @@ You can submit your implementation to MQBench by submmitting a merge request to 
 
 ## License
 
-This project is under Apache 2.0 License. 
+This project is under [Apache 2.0](https://github.com/TheGreatCold/mqbench/blob/main/LICENSE) License. 
 
